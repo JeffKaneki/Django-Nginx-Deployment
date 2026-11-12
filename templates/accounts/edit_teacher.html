@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Edit Teacher{% endblock %}
+{% block content %}
+<section class="dashboard-section">
+    <h2>Edit Teacher</h2>
+    <form method="post" class="teacher-form">
+        {% csrf_token %}
+        <div class="info-grid">
+        {% for field in form %}
+            <div class="info-card"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<p class="form-message error-message">{{ error }}</p>{% endfor %}</div>
+        {% endfor %}
+        </div>
+        <div class="dashboard-links"><button type="submit" class="logout-btn">Save Changes</button><a href="{% url 'teachers' %}" class="button-link">Back to Teachers</a></div>
+    </form>
+</section>
+{% endblock %}

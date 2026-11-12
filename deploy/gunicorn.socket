@@ -1,0 +1,12 @@
+[Unit]
+Description=Gunicorn socket for the Django login application
+
+[Socket]
+ListenStream=/run/gunicorn.sock
+SocketUser=angel
+SocketGroup=www-data
+SocketMode=0660
+RemoveOnStop=true
+
+[Install]
+WantedBy=sockets.target

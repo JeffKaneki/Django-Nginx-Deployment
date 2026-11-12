@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block extra_head %}
+{% if recaptcha_site_key %}<script src="https://www.google.com/recaptcha/api.js" async defer></script>{% endif %}
+{% endblock %}
+{% block public_content %}
+<div class="login-container">
+    <form class="login-form" method="post">
+        {% csrf_token %}
+        <h1>Login</h1>
+        {% if form.non_field_errors %}<div class="form-message error-message" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+        {% for field in form %}
+        <div class="form-group">
+            {{ field.label_tag }}{{ field }}
+            {% for error in field.errors %}<p class="form-message error-message">{{ error }}</p>{% endfor %}
+        </div>
+        {% endfor %}
+        {% if recaptcha_site_key %}
+        <div class="captcha-container">
+            <div class="g-recaptcha" data-sitekey="{{ recaptcha_site_key }}"></div>
+        </div>
+        {% else %}
+        <p class="form-message error-message" role="alert">Login verification is not configured. Contact the site administrator.</p>
+        {% endif %}
+        <div class="button-container"><button type="submit">Login</button><a class="button-link" href="{% url 'register' %}">Register</a></div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Login System{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="logo-container"><img class="logo" src="{% static 'images/logo.jpg' %}" alt="Logo"></div>
+    {% if user.is_authenticated %}
+    <main class="dashboard-container">
+        <aside class="dashboard-header" aria-label="Dashboard navigation and user summary">
+            <div class="dashboard-side-content">
+                <div>
+                    <h1>{{ user.get_role_display }} Dashboard</h1>
+                    <p class="user-greeting">Welcome back, <strong>{{ user.username }}</strong></p>
+                    <nav class="dashboard-nav" aria-label="Main navigation">
+                        <a href="{% url 'dashboard' %}" class="nav-link{% if request.resolver_match.url_name == 'dashboard' %} active{% endif %}">My Profile</a>
+                        {% if user.role == "admin" or user.role == "superadmin" %}
+                        <a href="{% url 'accounts' %}" class="nav-link{% if request.resolver_match.url_name == 'accounts' or request.resolver_match.url_name == 'account_password' %} active{% endif %}">Accounts List</a>
+                        <a href="{% url 'teachers' %}" class="nav-link{% if request.resolver_match.url_name == 'teachers' or request.resolver_match.url_name == 'teacher_edit' %} active{% endif %}">Teachers List</a>
+                        {% endif %}
+                        <a href="{% url 'password_change' %}" class="nav-link{% if request.resolver_match.url_name == 'password_change' %} active{% endif %}">Change Password</a>
+                        {% if user.is_staff %}<a href="{% url 'admin:index' %}" class="nav-link">Django Admin</a>{% endif %}
+                    </nav>
+                </div>
+                <form method="post" action="{% url 'logout' %}" class="dashboard-logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            </div>
+        </aside>
+        <div class="dashboard-content">
+            {% include "messages.html" %}
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    {% else %}
+        {% include "messages.html" %}
+        {% block public_content %}{% endblock %}
+    {% endif %}
+</body>
+</html>

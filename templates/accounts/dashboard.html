@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+{% block content %}
+<section class="dashboard-section">
+    <h2>Your Profile</h2>
+    <div class="info-grid">
+        <div class="info-card"><label>Email</label><p>{{ profile.email }}</p></div>
+        <div class="info-card"><label>Role</label><p>{{ profile.get_role_display }}</p></div>
+        <div class="info-card"><label>Phone</label><p>{{ profile.phone|default:"Not provided" }}</p></div>
+        <div class="info-card"><label>Address</label><p>{{ profile.address|default:"Not provided" }}</p></div>
+    </div>
+</section>
+{% endblock %}

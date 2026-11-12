@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Accounts List{% endblock %}
+{% block content %}
+<section class="dashboard-section">
+    <h2>Accounts List</h2>
+    <p>Manage account roles. Passwords are securely hashed and are never displayed.</p>
+    <div class="table-wrap">
+    <table class="accounts-table">
+        <thead><tr><th>Username</th><th>Email</th><th>Role</th><th>Password</th><th>Action</th></tr></thead>
+        <tbody>
+        {% for account in accounts %}
+        <tr>
+            <td>{{ account.username }}</td><td>{{ account.email }}</td>
+            {% if account.pk != user.pk %}
+            <td>
+                <form method="post" action="{% url 'set_role' account.pk %}" class="inline-form">
+                    {% csrf_token %}
+                    <select name="role" aria-label="Role for {{ account.username }}">
+                    {% for value, label in account.Role.choices %}
+                        {% if value != "superadmin" or user.role == "superadmin" %}
+                        <option value="{{ value }}"{% if account.role == value %} selected{% endif %}>{{ label }}</option>
+                        {% endif %}
+                    {% endfor %}
+                    </select>
+                    <button type="submit">Save role</button>
+                </form>
+            </td>
+            <td>Not displayed</td>
+            <td>
+                {% if user.role == "superadmin" %}<a class="button-link small-button" href="{% url 'account_password' account.pk %}">Set password</a>{% endif %}
+            </td>
+            {% else %}
+            <td>{{ account.get_role_display }}</td><td>Not displayed</td><td>Current account</td>
+            {% endif %}
+        </tr>
+        {% empty %}<tr><td colspan="5">No accounts found.</td></tr>{% endfor %}
+        </tbody>
+    </table>
+    </div>
+</section>
+{% endblock %}
